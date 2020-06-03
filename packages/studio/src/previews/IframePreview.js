@@ -5,7 +5,6 @@ import { format } from 'date-fns'
 import styles from './IframePreview.module.css'
 
 /**
- * Explore more examples of previews:
  * https://www.sanity.io/blog/evolve-authoring-experiences-with-views-and-split-panes
  */
 
