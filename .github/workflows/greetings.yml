@@ -3,6 +3,7 @@ name: Greetings
 on: [pull_request, issues]
 
 jobs:
+  name: hello 
   greeting:
     runs-on: ubuntu-latest
     steps:
