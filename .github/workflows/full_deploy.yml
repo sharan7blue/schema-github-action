@@ -1,10 +1,11 @@
 name: Studio and Web | Build and Deploy
 on:
-    repository_dispatch:
-      types: [trigger-first-deploy]  
+    push:
+      branches: [ master ]
 jobs:
   studio:
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'Initial Commit')"
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
@@ -14,18 +15,19 @@ jobs:
           node-version: 12.x
       - name: Build Studio
         run: |
-             yarn install
-             yarn run build-studio && cp packages/studio/netlify.toml packages/studio/dist
+             npm install
+             npm run build-studio && cp studio/netlify.toml studio/dist
       - name: Deploy Studio to Netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=packages/studio/dist --prod
+          args: deploy --dir=studio/dist --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
   web:
     runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'Initial Commit')"
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
@@ -37,8 +39,8 @@ jobs:
         env:
             SANITY_DEPLOY_STUDIO_TOKEN: ${{secrets.SANITY_AUTH_TOKEN}}
         run: |
-             yarn install
-             yarn run build-web
+             npm install
+             npm run build-web
       - name: Deploy Web to netlify
         uses: netlify/actions/cli@master
         env:
@@ -46,5 +48,5 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_WEB_SITE_ID }}
           SANITY_DEPLOY_STUDIO_TOKEN: ${{secrets.SANITY_AUTH_TOKEN}}
         with:
-          args: deploy --dir=packages/tl-ph/public --prod
+          args: deploy --dir=web/public --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID","SANITY_DEPLOY_STUDIO_TOKEN"]'
