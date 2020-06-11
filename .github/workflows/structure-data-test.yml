@@ -32,15 +32,6 @@ jobs:
               NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
               NETLIFY_SITE_ID: ${{ secrets.NETLIFY_WEB_SITE_ID }}
           - run: echo netlify URL ${{ steps.netlify-deploy.outputs.deploy-url }}      
-    sdtt:
-      runs-on: ubuntu-latest
-      name: Run Structured Data Tests
-      needs: [deploy_preview]
-      steps:
-          - name: Run Structured Data Test
-            run: |
-                 npm i structured-data-testing-tool -g
-                 sdtt --url  ${{ needs.deploy_preview.outputs.url }} --schemas "jsonld:Article"  -p Twitter -p Facebook --presets SocialMedia -i   
     axe-accessibity:   
       runs-on: ubuntu-latest
       name: Run Accessibility tests
@@ -49,7 +40,7 @@ jobs:
           - name: Run Accessibility tests
             run: |
                  npm install -g pa11y-ci
-                 axe ${{ needs.deploy_preview.outputs.url }}
+                 pa11y --standard WCAG2AA ${{ needs.deploy_preview.outputs.url }}
                  
                  
                  
