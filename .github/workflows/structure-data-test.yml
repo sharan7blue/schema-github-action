@@ -48,8 +48,8 @@ jobs:
       steps:
           - name: Run Accessibility tests
             run: |
-                 npm install axe-cli -g
-                 axe  ${{ needs.deploy_preview.outputs.url }} --tags wcag2aaa
+                 npm install -g pa11y-ci
+                 axe ${{ needs.deploy_preview.outputs.url }}
                  
                  
                  
